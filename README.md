@@ -1,24 +1,36 @@
 # SignVision AI – Move. Express. Connect.
-> **AI-Based Human Movement Recognition and Emoji-Based Communication for People with Mobility Disabilities**
+> **AI-Based Human Movement Recognition and Emoji-Based Communication for People with Mobility Disabilities**  
 > *Final-Year Engineering AI/ML Capstone Project*
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev)
-[![MediaPipe](https://img.shields.io/badge/Google-MediaPipe%20Pose-4285F4.svg)](https://developers.google.com/mediapipe)
-[![Database](https://img.shields.io/badge/Database-SQLite-003B57.svg)](https://sqlite.org)
-[![WCAG](https://img.shields.io/badge/Accessibility-WCAG%202.1%20Compliant-success.svg)](#accessibility)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-success?logo=github)](https://ruturaj9901.github.io/Signvision-AI/)
+[![React](https://img.shields.io/badge/React-18-61dafb.svg?logo=react)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF.svg?logo=vite)](https://vitejs.dev)
+[![Google MediaPipe](https://img.shields.io/badge/MediaPipe-Pose%20WASM-4285F4.svg?logo=google)](https://developers.google.com/mediapipe)
+[![WCAG](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-00C853.svg)](#-accessibility-features)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
 
-## 📌 Problem Statement & Overview
+## 🌐 Live Online Application
 
-Individuals affected by severe motor impairments—such as **Amyotrophic Lateral Sclerosis (ALS)**, **cerebral palsy**, **quadriplegia/paraplegia**, or **post-stroke motor deficits**—frequently face significant barriers to spoken and written communication. Traditional Assistive and Augmentative Communication (AAC) systems are often prohibitively expensive, require invasive brain-computer interfaces, or demand fine-motor finger dexterity that many individuals do not possess.
+Open and immediately use SignVision AI directly in any browser:  
+👉 **[https://ruturaj9901.github.io/Signvision-AI/](https://ruturaj9901.github.io/Signvision-AI/)**
 
-**SignVision AI** solves this problem by using standard consumer webcams and browser-native AI to detect intentional upper-body and head movements. It translates these physical movements into:
-1. **Expressive High-Contrast Emojis** (instantly understood across cultural and language barriers).
-2. **Audible Text-to-Speech (TTS) Voice Messages** (allowing users to verbally address caregivers and family members).
-3. **Persistent Communication Audits** (stored securely in a local SQLite database).
+> **No installation required!** Runs 100% client-side in the browser using WebAssembly and client-side computer vision.
+
+---
+
+## 📌 Problem Statement & Clinical Relevance
+
+Individuals experiencing severe physical limitations—such as **Amyotrophic Lateral Sclerosis (ALS)**, **Cerebral Palsy**, **Quadriplegia / Paraplegia**, or **Post-Stroke Motor Deficits**—frequently face significant barriers to spoken and written communication.
+
+Traditional Augmentative and Alternative Communication (AAC) systems often require expensive dedicated hardware, invasive eye-trackers, or fine-motor dexterity that many patients cannot physically maintain.
+
+**SignVision AI** introduces an accessible, zero-cost, vision-based assistive solution that operates in any standard browser. By combining real-time human pose estimation with kinematic and temporal action recognition, subtle intentional body and head movements are dynamically transformed into:
+1. **Expressive High-Contrast Emojis** (understood universally across cultural and language barriers).
+2. **Audible Text-to-Speech (TTS) Voice Synthesis** (allowing patients to verbally address caregivers and family).
+3. **Augmentative Emoji Communication Board (AAC)** (categorized daily needs, emergency requests, feelings, and questions).
+4. **Persistent Audited Communication Logs** (stored securely in browser `localStorage`).
 
 ---
 
@@ -26,31 +38,19 @@ Individuals affected by severe motor impairments—such as **Amyotrophic Lateral
 
 ```mermaid
 flowchart TD
-    subgraph Client["Frontend Client (React 18 + Vite)"]
-        Cam[Webcam Input @ 30 FPS] --> MP[MediaPipe Pose Estimator]
-        MP --> Skele[33 3D Keypoint Extraction]
-        Skele --> Canvas[Real-Time Skeleton Canvas Overlay]
-        Skele --> Buffer[Rolling Temporal Frame Buffer (16 Frames)]
-        Buffer --> APIReq[REST API /api/predict]
-        Sim[Simulation Mode / Virtual Avatar] -.-> APIReq
-    end
+    subgraph Browser["Client Browser (React 18 + WebAssembly)"]
+        Cam["Webcam Video Feed @ 30 FPS"] --> MP["Google MediaPipe Pose Engine"]
+        MP --> Skele["33 3D Keypoint Extraction (x, y, z, visibility)"]
+        Skele --> Canvas["Real-time Skeletal Canvas Overlay"]
+        Skele --> Buffer["Sliding Temporal Buffer (16 Frames)"]
+        Buffer --> Classifier["Kinematic & Temporal Classifier (JavaScript)"]
+        Sim["Simulation Lab (Virtual Avatar)"] -.-> Classifier
 
-    subgraph Server["Backend Server (FastAPI + Python 3.11)"]
-        APIReq --> Router[FastAPI Inference Router]
-        Router --> Norm[Geometric Normalization Engine]
-        Norm --> Angles[Joint Angles & Velocity Analyzer]
-        Angles --> Classifier{Modular Classifier}
-        Classifier --> Heuristic[Spatial Kinematics Engine]
-        Classifier --> BiLSTM[Temporal BiLSTM Neural Model]
-        Heuristic --> Decision[Movement & Confidence Scoring]
-        BiLSTM --> Decision
-        Decision --> Catalog[Emoji & Assistive Catalog Mapping]
-    end
-
-    subgraph Storage["Persistence & Audio"]
-        Decision --> DB[(SQLite Database: signvision.db)]
-        Decision --> TTS[Browser Web Speech API Synthesis]
-        Catalog --> Comm[Augmentative Communication Board]
+        Classifier --> Engine{"Movement Decision Engine"}
+        Engine --> Catalog["Emoji & Assistive Catalog Mapping"]
+        Catalog --> Audio["Web Speech API Text-to-Speech Engine"]
+        Catalog --> UI["Live HUD & AAC Communication Board"]
+        Catalog --> Storage[("Browser LocalStorage: Users & Event Logs")]
     end
 ```
 
@@ -82,196 +82,182 @@ flowchart TD
 | **Resting / Neutral** | 🧘 | *"Neutral posture. Relaxed."* | Baseline resting posture |
 
 ### 3. Simulation Testing Lab (Zero-Webcam Required)
-- Built-in **2D Virtual Skeleton Avatar** simulating pre-recorded landmark sequences for all 12+ movements.
-- Frame-by-frame stepper, speed controls (0.5x, 1x, 2x), and direct REST API execution for presentation or offline testing.
+- Built-in **2D Virtual Skeleton Avatar** simulating pre-recorded landmark sequences for all 13 movements.
+- Frame-by-frame stepper, speed controls (0.5x, 1x, 2x), and direct recognition pipeline execution for presentation, testing, or environments without a camera.
 
 ### 4. Assistive Emoji Communication Board (AAC)
 - Categorized touch tiles for **Urgent Needs**, **Social Greetings**, **Responses**, and **Daily Comfort**.
 - Real-time sentence strip builder to compose multi-word phrases and speak them with one click.
 
 ### 5. Accessibility & Inclusivity (WCAG 2.1)
-- **High Contrast Theme**: Pure black background with high-visibility neon accents for low-vision users.
-- **Multi-scale Typography**: Dynamic font size scaling without layout clipping.
+- **High Contrast Theme**: Pure black background (`#000000`) with high-visibility contrast accents (`#ffff00`, `#00ffff`) for low-vision users.
+- **Multi-scale Typography**: Dynamic font size scaling (Normal, Large, Extra Large) without layout clipping.
 - **Text-to-Speech Engine**: Web Speech API with customizable rates and automatic audio debounce.
+
+### 6. User Authentication & Session Persistence
+- **Sign In / Sign Up Flow**: Real user account registration and validation.
+- **One-Click Demo Account**: Pre-seeded demo credentials (`demo` / `demo123`) for instant evaluation.
+- **Protected Views**: Dashboard, history, and communication boards are protected behind authentication.
+- **Data Persistence**: Account profiles and recognition logs saved automatically in browser `localStorage`.
 
 ---
 
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```text
-signvision-ai/
-├── backend/                  # FastAPI Backend
-│   ├── classifier.py         # Recognition service & modular model connector
-│   ├── database.py           # SQLite database engine & SQLAlchemy models
-│   ├── gestures_data.py      # Gestures catalog, emojis & assistive phrases
-│   ├── main.py               # FastAPI application with REST endpoints
-│   └── schemas.py            # Pydantic validation models
-├── database/                 # SQLite storage directory
-│   └── signvision.db         # Persistent SQLite database file
-├── frontend/                 # React 18 + Vite Frontend
-│   ├── public/               # Static assets
+Signvision-AI/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml        # GitHub Actions automated Pages build & deploy
+├── docs/                     # Static production build for GitHub Pages /docs branch
+│   ├── assets/               # Bundled JavaScript and CSS assets
+│   ├── .nojekyll             # Disables Jekyll processing on GitHub Pages
+│   ├── 404.html              # SPA routing fallback for GitHub Pages
+│   └── index.html            # Entry point for GitHub Pages
+├── frontend/                 # React 18 + Vite Source Code
+│   ├── public/               # Static assets & 404 handler
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── AboutTech.jsx             # Project architecture & tech specs
-│   │   │   ├── Dashboard.jsx             # Live HUD, camera view & speech cards
-│   │   │   ├── EmojiCommunicator.jsx     # AAC board with sentence strip
-│   │   │   ├── GestureReferenceModal.jsx # Visual gesture catalog
-│   │   │   ├── Navbar.jsx                # Navigation & accessibility controls
-│   │   │   ├── PoseCamera.jsx            # MediaPipe canvas overlay & video
-│   │   │   ├── RecognitionHistory.jsx    # SQLite history table & export tools
-│   │   │   └── SimulationMode.jsx        # Virtual skeleton sandbox
+│   │   │   ├── AboutTech.jsx             # Technical architecture & project specs
+│   │   │   ├── AuthModal.jsx             # Accessible Sign In / Sign Up component
+│   │   │   ├── Dashboard.jsx             # Live camera HUD & real-time prediction
+│   │   │   ├── EmojiCommunicator.jsx     # AAC board with sentence strip composer
+│   │   │   ├── GestureReferenceModal.jsx # Visual gesture catalog modal
+│   │   │   ├── Navbar.jsx                # Navigation, profile badge & accessibility
+│   │   │   ├── PoseCamera.jsx            # MediaPipe canvas overlay & video capture
+│   │   │   ├── RecognitionHistory.jsx    # Event log table, search & CSV/JSON export
+│   │   │   └── SimulationMode.jsx        # 2D virtual avatar sandbox
 │   │   ├── services/
-│   │   │   ├── api.js                    # REST API client with offline fallback
-│   │   │   ├── simulationData.js         # Synthetic landmark generator
+│   │   │   ├── api.js                    # Standalone client service
+│   │   │   ├── gesturesData.js           # Catalog of gestures & assistive phrases
+│   │   │   ├── movementClassifier.js     # Kinematic & temporal rules engine
+│   │   │   ├── simulationData.js         # Synthetic pose landmark generator
+│   │   │   ├── storageService.js         # LocalStorage user auth & history logs
 │   │   │   └── tts.js                    # Web Speech API & audio chimes
 │   │   ├── App.jsx                       # Root routing & state coordinator
 │   │   ├── index.css                     # Design system & high-contrast theme
-│   │   └── main.jsx                      # React entrypoint
-│   ├── index.html            # Web page with MediaPipe CDN fallbacks
-│   ├── package.json          # Frontend dependencies
-│   └── vite.config.js        # Vite config with backend proxy
-├── models/                   # Modular AI/ML Model Layer
+│   │   └── main.jsx                      # Frontend entrypoint
+│   ├── index.html            # Web page with MediaPipe CDN
+│   ├── package.json          # Dependencies (React, Lucide, Canvas-Confetti)
+│   └── vite.config.js        # Vite config with base path /Signvision-AI/
+├── backend/                  # (Optional) Python FastAPI Backend
+│   ├── classifier.py         # Modular model connector
+│   ├── database.py           # SQLite persistence layer
+│   ├── gestures_data.py      # Gestures catalog
+│   ├── main.py               # REST API server
+│   └── schemas.py            # Pydantic models
+├── models/                   # Modular AI/ML Model Training Layer
 │   ├── base_classifier.py    # Abstract base class for recognition models
-│   ├── heuristic_classifier.py# Spatial kinematics & temporal oscillation engine
-│   ├── lstm_classifier.py    # Temporal BiLSTM neural network scaffold
-│   ├── train_lstm.py         # Synthetic dataset generator & training script
-│   └── gesture_weights.json  # Exported model weights & metadata
+│   ├── heuristic_classifier.py# Python spatial kinematics engine
+│   ├── lstm_classifier.py    # Temporal BiLSTM model scaffold
+│   ├── train_lstm.py         # Synthetic landmark generator & training script
+│   └── gesture_weights.json  # Exported model weights
 ├── .env.example              # Environment variables template
-├── package.json              # Root project scripts
-├── requirements.txt          # Python dependencies
-├── start.bat                 # One-click Windows master launcher
-├── start_backend.bat         # Windows launcher for FastAPI
-└── start_frontend.bat        # Windows launcher for React
+├── .gitignore                # Comprehensive Git ignore rules
+├── package.json              # Root project package runner
+├── requirements.txt          # Python packages (fastapi, uvicorn, sqlalchemy)
+├── start.bat                 # 🚀 One-click Windows master launcher
+├── start_frontend.bat        # Windows launcher for Web server
+└── start_backend.bat         # Optional Windows launcher for FastAPI
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Deployment to GitHub Pages
 
-### Prerequisites
-- **Python 3.10+** (Python 3.11 recommended)
-- **Node.js 18+** and **npm**
+Deploying your repository to GitHub Pages takes less than 1 minute:
+
+### Method A: Automated GitHub Actions (Recommended)
+1. Push this repository to GitHub: `https://github.com/ruturaj9901/Signvision-AI`
+2. In your GitHub repository, navigate to **Settings** > **Pages**.
+3. Under **Build and deployment** > **Source**, select **GitHub Actions**.
+4. That's it! The included `.github/workflows/deploy.yml` workflow will automatically build and deploy your site on every push to `main`!
+5. Your website will be live at:  
+   `https://ruturaj9901.github.io/Signvision-AI/`
+
+### Method B: Deploy from Branch (`/docs` folder)
+1. Push this repository to GitHub.
+2. In GitHub, go to **Settings** > **Pages**.
+3. Under **Build and deployment** > **Source**, choose **Deploy from a branch**.
+4. Select branch **`main`** (or `master`) and folder **`/docs`**.
+5. Click **Save**. Within 60 seconds, your site is live!
 
 ---
 
-### Option A: One-Click Startup (Windows)
+## 💻 Running Locally on Windows
+
+You can also run the project locally offline on any Windows computer:
+
+### Option 1: One-Click Startup (No manual setup!)
 Double-click:
 ```bat
 start.bat
 ```
-This automatically launches the FastAPI server on port 8000, the React frontend on port 3000, and opens your default browser to `http://localhost:3000`!
+* Automatically verifies Node.js and installs npm dependencies if needed.
+* Launches the development web server.
+* Automatically opens your default web browser to: `http://localhost:3000/Signvision-AI/`
 
 ---
 
-### Option B: Manual Setup
+### Option 2: Manual Terminal Commands
+If you prefer running manual commands in PowerShell or Command Prompt:
 
-#### 1. Backend Setup (FastAPI)
 ```bash
-# In project root:
-# Install dependencies
-python -m pip install -r requirements.txt
+# 1. Clone your repository
+git clone https://github.com/ruturaj9901/Signvision-AI.git
+cd Signvision-AI
 
-# (Optional) Run the training pipeline to generate sample weights
-python models/train_lstm.py
-
-# Launch FastAPI server
-python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
-```
-- API Health: `http://127.0.0.1:8000/api/health`
-- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
-
-#### 2. Frontend Setup (React + Vite)
-```bash
-# In frontend directory:
+# 2. Navigate to frontend & install dependencies
 cd frontend
 npm install
+
+# 3. Start local development server
 npm run dev
 ```
-- Web Application: `http://localhost:3000`
+
+Open your browser to:
+👉 `http://localhost:3000/Signvision-AI/`
 
 ---
 
-## 📡 REST API Documentation
+## 📖 How to Use the Application
 
-### 1. `GET /api/health`
-Checks server status, database connectivity, and active ML model.
-```json
-{
-  "status": "operational",
-  "app_name": "SignVision AI – Move. Express. Connect.",
-  "version": "1.0.0",
-  "model_architecture": "Modular BiLSTM / Kinematic Spatial-Temporal Engine",
-  "database_status": "connected (SQLite)",
-  "active_gestures_count": 13
-}
-```
-
-### 2. `POST /api/predict`
-Ingests 33 MediaPipe pose landmarks and optional rolling history frames; returns classification result.
-**Payload:**
-```json
-{
-  "landmarks": [ { "x": 0.5, "y": 0.2, "z": 0.0, "visibility": 0.99 } ],
-  "history": [],
-  "source": "live_camera",
-  "auto_save": true
-}
-```
-**Response:**
-```json
-{
-  "detected_movement": "Right Hand Raise",
-  "confidence": 0.94,
-  "emoji": "🙋‍♂️",
-  "generated_message": "I need assistance, please.",
-  "tts_text": "I need assistance, please.",
-  "category": "Upper Body",
-  "is_actionable": true,
-  "execution_time_ms": 1.2,
-  "model_type": "SignVision-BiLSTM-Kinematic"
-}
-```
-
-### 3. `GET /api/history`
-Retrieves paginated recognition events from SQLite. Query parameters: `limit`, `offset`, `source`.
-
-### 4. `DELETE /api/history/clear`
-Clears all saved records from the SQLite database.
+1. **Authentication**:
+   - On initial launch, you will see the **SignVision AI Authentication Portal**.
+   - Click **One-Click Demo Account** (or enter `demo` / `demo123`) to immediately log in.
+   - Alternatively, click **Sign Up Now** to create a custom user account.
+2. **Live Camera Recognition**:
+   - Navigate to **Live Camera HUD**.
+   - Click **Start Camera** and grant camera permission in your browser.
+   - Position yourself ~2–4 feet from the webcam so your head, shoulders, and hands are visible.
+   - Perform any supported gesture (e.g. raise your right hand, wave, nod, or lean left/right).
+   - SignVision AI will immediately identify the movement, display the associated emoji, animate the card, and speak the assistive phrase via Text-to-Speech!
+3. **Simulation Mode**:
+   - If you do not have a webcam or prefer testing offline, click **Simulation Lab**.
+   - Select any gesture from the catalog to see the **2D Virtual Skeleton Avatar** perform it in a smooth animated loop.
+   - Inspect frame numbers, test varying playback speeds (0.5x, 1x, 2x), and click **Save Expression to History**.
+4. **Emoji AAC Communication Board**:
+   - Navigate to **Emoji Board** to access touch/click communication tiles organized into **Urgent Needs**, **Social**, **Responses**, and **Comfort**.
+   - Tap individual tiles to speak single requests, or build sentences in the **Live Sentence Strip** and click **Speak Full Sentence**.
+5. **Recognition History & Export**:
+   - Open **History & Logs** to audit all detected gestures with timestamps, confidence ratings, and source tags.
+   - Use the **Search bar** or **Source filter** to find specific events.
+   - Click **CSV** or **JSON** to download the audited communication logs directly to your computer.
+   - Click **Clear History** to reset logs stored in your browser.
 
 ---
 
-## 🧠 Machine Learning & Modular Design
+## 🎓 Academic Viva & Technical Evaluation Highlights
 
-The recognition pipeline is architected around the `BaseMovementClassifier` interface. Developers or researchers can plug in any custom PyTorch, TensorFlow, or ONNX model:
-
-```python
-from models.base_classifier import BaseMovementClassifier
-
-class CustomTransformerClassifier(BaseMovementClassifier):
-    def predict(self, current_landmarks, history_frames=None):
-        # 1. Preprocess landmarks
-        # 2. Forward pass through neural network
-        # 3. Return (gesture_name, confidence)
-        return "wave_hand", 0.98
-```
-
-To retrain the model on synthetic landmark sequences:
-```bash
-python models/train_lstm.py --output models/gesture_weights.json
-```
-
----
-
-## 🎓 Academic / Viva Evaluation Points
-
-1. **Why MediaPipe Pose over raw CNN pixel video?**
-   - Traditional 2D/3D CNNs (e.g. C3D, I3D) require GPU compute and fail on standard low-power laptops. MediaPipe performs edge-level landmark extraction (33 keypoints), reducing input dimensionality by over 99.8% while preserving biomechanical movement fidelity.
-2. **How is distance from the camera handled?**
-   - The spatial normalizer calculates the Euclidean distance between left and right shoulders (`shoulder_width`). All joint displacements and angles are evaluated relative to this dynamically calculated baseline.
-3. **How are static vs dynamic movements differentiated?**
-   - Static movements (e.g. Hand Raise, Open Arms) evaluate instantaneous joint angles in single frames. Dynamic movements (Hand Wave, Head Nod) inspect variance and direction zero-crossings across a 16-frame sliding temporal window.
+1. **Why is in-browser MediaPipe Pose preferred over server-side video streaming?**
+   - Video streaming to a server incurs heavy bandwidth costs, network latency (200–500ms), and privacy concerns (streaming video of patients over the web). MediaPipe Pose runs **locally inside the user's browser WebAssembly sandbox at 30+ FPS**, ensuring absolute patient privacy, zero server costs, and instant feedback.
+2. **How does the system ensure distance and scale invariance?**
+   - The classifier computes the Euclidean distance between left and right shoulders (`shoulder_width = dist(L_shoulder, R_shoulder)`). All elevation thresholds, wrist displacements, and head movements are evaluated as ratios of `shoulder_width`, meaning the user can sit close to or far from the camera without affecting accuracy.
+3. **How are static postures differentiated from dynamic gestures?**
+   - Static postures (Hand Raise, Salute, Hands Together, Lean) are classified on instantaneous single-frame joint angles. Dynamic gestures (Hand Wave, Head Nod) inspect horizontal/vertical velocity direction zero-crossings and variance across a 16-frame sliding temporal buffer.
 
 ---
 
 ## 📄 License
-Released under the MIT License for educational and assistive technology development.
+
+This project is licensed under the **MIT License** — free for academic, non-commercial, and assistive technology development.

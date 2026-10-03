@@ -32,7 +32,7 @@ export default function RecognitionHistory({ historyList, onHistoryCleared, onRe
   });
 
   const handleClearHistory = async () => {
-    if (!window.confirm('Are you sure you want to clear all recognition history from SQLite?')) {
+    if (!window.confirm('Are you sure you want to clear all recognition history?')) {
       return;
     }
 
@@ -129,7 +129,7 @@ export default function RecognitionHistory({ historyList, onHistoryCleared, onRe
               </span>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', margin: '2px 0 0 0' }}>
-              Audited event log stored in SQLite database (<code style={{ color: 'var(--accent-cyan)' }}>signvision.db</code>)
+              Audited event log stored in Browser LocalStorage (<code style={{ color: 'var(--accent-cyan)' }}>Local DB</code>)
             </p>
           </div>
         </div>

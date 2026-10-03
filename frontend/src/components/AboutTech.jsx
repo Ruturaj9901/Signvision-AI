@@ -156,32 +156,29 @@ export default function AboutTech({ onOpenGestureCatalog }) {
           </ul>
         </div>
 
-        {/* REST API & Data Schema */}
+        {/* Data Storage & Deployment Architecture */}
         <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
             <Database size={22} color="var(--accent-emerald)" />
-            <h3 style={{ fontSize: '1.15rem', margin: 0 }}>Backend REST API & SQLite</h3>
+            <h3 style={{ fontSize: '1.15rem', margin: 0 }}>Browser-Native & Cloud Architecture</h3>
           </div>
 
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '14px' }}>
-            Powered by Python <strong>FastAPI</strong> with automatic OpenAPI Swagger documentation at <code style={{ color: 'var(--accent-cyan)' }}>/docs</code>:
+            Built for <strong>zero-dependency instant deployment</strong> on GitHub Pages while supporting full-stack local server mode:
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.82rem' }}>
             <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-              <span style={{ color: 'var(--accent-emerald)', fontWeight: 700 }}>GET</span> <code>/api/health</code> – System uptime, active model & DB health
+              <span style={{ color: 'var(--accent-emerald)', fontWeight: 700 }}>STATIC</span> <strong>GitHub Pages Deployment:</strong> Runs 100% in-browser via WebAssembly MediaPipe Pose
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-              <span style={{ color: 'var(--accent-indigo)', fontWeight: 700 }}>POST</span> <code>/api/predict</code> – Live landmark inference & emoji mapping
+              <span style={{ color: 'var(--accent-cyan)', fontWeight: 700 }}>STORAGE</span> <strong>Browser LocalStorage:</strong> Client-side user accounts, authentication tokens & event logs
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-              <span style={{ color: 'var(--accent-emerald)', fontWeight: 700 }}>GET</span> <code>/api/gestures</code> – Full catalog of supported gestures
+              <span style={{ color: 'var(--accent-indigo)', fontWeight: 700 }}>AUDIO</span> <strong>Web Speech API:</strong> Direct browser voice synthesis without external cloud TTS API keys
             </div>
             <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-              <span style={{ color: 'var(--accent-emerald)', fontWeight: 700 }}>GET</span> <code>/api/history</code> – Paginated SQLite event history
-            </div>
-            <div style={{ background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-              <span style={{ color: '#ef4444', fontWeight: 700 }}>DELETE</span> <code>/api/history/clear</code> – Safe history purge
+              <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>OPTIONAL</span> <strong>FastAPI Backend:</strong> Standalone Python REST API & SQLite persistence included
             </div>
           </div>
         </div>

@@ -12,31 +12,63 @@ echo.
 
 cd /d "%~dp0"
 
-echo [1/3] Launching FastAPI Backend Server in background window...
-start "SignVision AI - Backend" cmd /c "%~dp0start_backend.bat"
+:: 1. Check npm
+set NPM_CMD=npm
+where npm.cmd >nul 2>nul
+if %errorlevel% equ 0 (
+    set NPM_CMD=npm.cmd
+) else (
+    where npm >nul 2>nul
+    if %errorlevel% neq 0 (
+        echo [ERROR] Node.js and npm are required to run locally.
+        echo Please install Node.js from https://nodejs.org or open the online GitHub Pages URL:
+        echo https://ruturaj9901.github.io/Signvision-AI/
+        pause
+        exit /b 1
+    )
+)
 
-:: Brief 2-second delay to allow FastAPI to bind port 8000
-timeout /t 2 /nobreak >nul
+:: 2. Check and install frontend dependencies if needed
+if not exist "frontend\node_modules\" (
+    echo [1/3] First-time setup: Installing frontend dependencies...
+    cd frontend
+    call %NPM_CMD% install
+    cd ..
+) else (
+    echo [1/3] Dependencies verified.
+)
 
-echo.
-echo [2/3] Launching React Frontend Server in background window...
-start "SignVision AI - Frontend" cmd /c "%~dp0start_frontend.bat"
+:: 3. Optional: check for Python to run backend if desired
+set START_BACKEND=0
+where python >nul 2>nul
+if %errorlevel% equ 0 (
+    if exist "backend\main.py" (
+        set START_BACKEND=1
+    )
+)
 
-:: Brief delay before launching browser
+if %START_BACKEND% equ 1 (
+    echo [2/3] Launching optional local FastAPI backend on port 8000...
+    start "SignVision AI - Backend" cmd /c "%~dp0start_backend.bat"
+    timeout /t 2 /nobreak >nul
+) else (
+    echo [2/3] Running in Standalone In-Browser AI Mode (No backend required!)...
+)
+
+:: 4. Start frontend server in background window
+start "SignVision AI - Web" cmd /c "%~dp0start_frontend.bat"
+
+:: 5. Open browser
+echo [3/3] Opening Web Browser to SignVision AI...
 timeout /t 3 /nobreak >nul
-
-echo.
-echo [3/3] Opening Web Browser to SignVision AI Dashboard...
-start http://localhost:3000
+start http://localhost:3000/Signvision-AI/
 
 echo.
 echo ======================================================================
-echo [SUCCESS] Both servers are now running!
-echo   * Web Dashboard:  http://localhost:3000
-echo   * FastAPI Server: http://127.0.0.1:8000
-echo   * API Docs:       http://127.0.0.1:8000/docs
+echo [SUCCESS] SignVision AI is running!
+echo   * Local URL:       http://localhost:3000/Signvision-AI/
+echo   * GitHub Pages:    https://ruturaj9901.github.io/Signvision-AI/
 echo.
-echo Leave this launcher window or press any key to close this console.
-echo (The backend and frontend windows will remain active).
+echo You can close this launcher window at any time.
 echo ======================================================================
 pause

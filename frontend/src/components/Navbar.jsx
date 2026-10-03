@@ -165,7 +165,7 @@ export default function Navbar({
             <span className="hide-sm">Gestures</span>
           </button>
 
-          {/* Backend Health Badge */}
+          {/* AI Engine Status Badge */}
           <div 
             style={{
               display: 'flex',
@@ -173,16 +173,16 @@ export default function Navbar({
               gap: '6px',
               padding: '6px 10px',
               borderRadius: 'var(--radius-full)',
-              background: backendOnline ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-              border: `1px solid ${backendOnline ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
-              color: backendOnline ? 'var(--accent-emerald)' : 'var(--accent-amber)',
+              background: 'rgba(16, 185, 129, 0.1)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              color: 'var(--accent-emerald)',
               fontSize: '0.78rem',
               fontWeight: 600
             }}
-            title={backendOnline ? "FastAPI Server Connected (port 8000)" : "Using Local In-Browser Kinematics Fallback"}
+            title="In-Browser MediaPipe Pose & Kinematic Movement Recognition Active"
           >
-            {backendOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
-            <span className="hide-sm">{backendOnline ? 'API Online' : 'Fallback'}</span>
+            <Activity size={14} />
+            <span className="hide-sm">AI Engine Active</span>
           </div>
 
           {/* Accessibility Quick Toggles */}

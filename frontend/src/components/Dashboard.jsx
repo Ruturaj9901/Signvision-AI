@@ -246,7 +246,7 @@ export default function Dashboard({
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Cpu size={16} color="var(--accent-purple)" />
-              <span>Engine: <strong>{backendOnline ? 'FastAPI BiLSTM' : 'Browser Engine'}</strong></span>
+              <span>Engine: <strong>Browser Kinematic AI</strong></span>
             </div>
           </div>
         </div>
