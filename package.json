@@ -1,0 +1,23 @@
+{
+  "name": "signvision-ai",
+  "version": "1.0.0",
+  "description": "SignVision AI - AI-Based Human Movement Recognition and Emoji-Based Communication for People with Mobility Disabilities",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "train": "python models/train_lstm.py"
+  },
+  "keywords": [
+    "mediapipe",
+    "ai",
+    "movement-recognition",
+    "assistive-technology",
+    "accessibility",
+    "react",
+    "fastapi",
+    "emoji-communication"
+  ],
+  "author": "SignVision AI Team",
+  "license": "MIT"
+}

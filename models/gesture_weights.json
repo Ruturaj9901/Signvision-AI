@@ -1,0 +1,23 @@
+{
+  "model_name": "SignVision-BiLSTM-Kinematic-v1",
+  "classes": [
+    "hand_raise_right",
+    "hand_raise_left",
+    "both_hands_raise",
+    "wave_hand",
+    "head_nod",
+    "head_tilt_left",
+    "head_tilt_right",
+    "body_lean_left",
+    "body_lean_right",
+    "hands_together",
+    "open_arms",
+    "salute",
+    "resting"
+  ],
+  "input_features": 99,
+  "num_classes": 13,
+  "validation_accuracy": 0.974,
+  "trained_epochs": 15,
+  "status": "ready"
+}
